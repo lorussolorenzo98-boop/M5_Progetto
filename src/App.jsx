@@ -5,12 +5,18 @@ import './App.css'
 import Welcome from './components/Welcome.jsx';
 import AllTheBooks from './components/AllTheBooks.jsx';
 import books from "./data/horror.json"
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ThemeContext } from './context/ThemeContextProvider.jsx';
 
 
 
 function App() {
   const [filteredBooks, setFilteredBooks] = useState(books);
+  const {theme, toggleTheme} = useContext(ThemeContext)
+  useEffect(()=> {
+    console.log(theme)
+  },[theme] )
+
 
   return (
     <>

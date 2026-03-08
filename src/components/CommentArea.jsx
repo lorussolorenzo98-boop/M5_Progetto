@@ -5,7 +5,7 @@ import AddComment from "./AddComment";
 function CommentArea({book}) {
     const [comments, setComments] = useState([])
 
-    const fectComments = async () => {
+    const fetchComments = async () => {
         try {
             const response = await fetch(
                 `https://striveschool-api.herokuapp.com/api/books/${book.asin}/comments/`,
@@ -22,10 +22,10 @@ function CommentArea({book}) {
             console.log(error)
         }
     }
-    useEffect(() => { fectComments() }, [])
+    useEffect(() => { fetchComments() }, [])
     return (
         <>
-            <AddComment asin = {book.asin} />
+            <AddComment asin = {book.asin} fetchComments = {fetchComments} />
             <CommentList comments = {comments} />
         </>
     )
