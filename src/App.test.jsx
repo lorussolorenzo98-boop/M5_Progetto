@@ -41,7 +41,9 @@ it("renders correct number of book cards", () => {
 it("renders CommentArea correctly", () => {
   render(
     <MemoryRouter>
-      <CommentArea selected={null} />
+      <ThemeContextProvider>
+        <CommentArea selected={null} />
+      </ThemeContextProvider>
     </MemoryRouter>
   )
 
@@ -62,7 +64,7 @@ it("calls setFilteredBooks when typing in navbar search", () => {
 
   const searchInput = screen.getByPlaceholderText(/cerca/i)
 
-  fireEvent.keyUp(searchInput, { target: { value: "har" } })
+  fireEvent.change(searchInput, { target: { value: "har" } })
 
   expect(mockSetFilteredBooks).toHaveBeenCalled()
 })
@@ -157,7 +159,9 @@ it("resets first book border when clicking a second book", () => {
 it("does not render SingleComment at page load", () => {
   render(
     <MemoryRouter>
-      <CommentArea selected={null} />
+      <ThemeContextProvider>
+        <CommentArea selected={null} />
+      </ThemeContextProvider>
     </MemoryRouter>
   )
 
@@ -185,7 +189,9 @@ it("loads comments in the DOM when a book is selected", async () => {
 
   render(
     <MemoryRouter>
-      <CommentArea selected={books[0].asin} />
+      <ThemeContextProvider>
+        <CommentArea selected={books[0].asin} />
+      </ThemeContextProvider>
     </MemoryRouter>
   )
 
