@@ -2,37 +2,59 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
-import books from "../data/horror.json"
+import Button from 'react-bootstrap/Button';
+import books from "../data/horror.json";
 import { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContextProvider';
+import { Link } from "react-router-dom";
 
-function MyNav({setFilteredBooks}) {
-  const {toggleTheme} = useContext(ThemeContext)
+function MyNav({ setFilteredBooks }) {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
   const filterBooks = (event) => {
+    const bookArray = books.filter((book) =>
+      book.title.toLowerCase().includes(event.target.value.toLowerCase().trim())
+    );
+    setFilteredBooks(bookArray);
+  };
 
-    const bookArray = books.filter((book) => book.title.toLowerCase().includes(event.target.value.toLowerCase().trim()))
-    setFilteredBooks(bookArray)
-    console.log(event.target.value)
-  }
   return (
-    <>
-      <Navbar bg="dark" data-bs-theme="dark">
-        <Container>
-          <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+    <Navbar
+      expand="lg"
+      bg={theme === "dark" ? "dark" : "light"}
+      data-bs-theme={theme === "dark" ? "dark" : "light"}
+      className="shadow-sm mb-3"
+    >
+      <Container>
+        <Navbar.Brand as={Link} to="/">EpicBooks</Navbar.Brand>
+
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">About</Nav.Link>
-            <Nav.Link href="#pricing">Browse</Nav.Link>
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <Nav.Link href="#">About</Nav.Link>
+            <Nav.Link href="#">Browse</Nav.Link>
           </Nav>
-          <button onClick={toggleTheme}>Cambia Tema</button>
-          <Form.Control
-            onKeyUp={filterBooks}
-            placeholder="Cerca"
-          />
-        </Container>
-      </Navbar>
-    </>
+
+          <div className="d-flex align-items-center gap-2">
+            <Button
+              variant={theme === "dark" ? "outline-light" : "outline-dark"}
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? "Light mode" : "Dark mode"}
+            </Button>
+
+            <Form.Control
+              type="search"
+              placeholder="Cerca un libro..."
+              onChange={filterBooks}
+              style={{ width: "260px" }}
+            />
+          </div>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
 
-export default MyNav
+export default MyNav;

@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
 import CommentList from "./CommentList";
 import AddComment from "./AddComment";
+import { useContext } from "react"
+import { ThemeContext } from "../context/ThemeContextProvider"
 
-function CommentArea({book}) {
+function CommentArea({ selected }) {
+    const { theme } = useContext(ThemeContext)
     const [comments, setComments] = useState([])
+    const commentAreaClass = `p-4 border rounded-4 shadow-sm ${theme === "dark" ? "bg-dark text-light border-secondary" : "bg-light text-dark"
+        }`
 
     const fetchComments = async () => {
         try {
             const response = await fetch(
-                `https://striveschool-api.herokuapp.com/api/books/${book.asin}/comments/`,
+                `https://striveschool-api.herokuapp.com/api/books/${selected}/comments/`,
                 {
                     headers: {
                         Authorization:
@@ -17,17 +22,32 @@ function CommentArea({book}) {
                 },
             );
             const data = await response.json()
-           setComments(data)
+            setComments(data)
         } catch (error) {
             console.log(error)
         }
     }
-    useEffect(() => { fetchComments() }, [])
+    useEffect(() => {
+        if (selected) {
+            fetchComments()
+        }
+    }, [selected])
+    if (!selected) {
+        return (
+            <div className={commentAreaClass}>
+                <h4 className="mb-4">Recensioni</h4>
+                <p className="mb-0">Seleziona un libro per vedere i commenti</p>
+            </div>
+        )
+    }
+
     return (
-        <>
-            <AddComment asin = {book.asin} fetchComments = {fetchComments} />
-            <CommentList comments = {comments} />
-        </>
+        <div className={commentAreaClass}>
+            <h4 className="mb-3">Recensioni</h4>
+            <AddComment asin={selected} fetchComments={fetchComments} />
+            <hr className="my-4" />
+            <CommentList comments={comments} />
+        </div>
     )
 }
 

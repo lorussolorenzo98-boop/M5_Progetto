@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { Form, Row, Col, Button } from "react-bootstrap"
-
+import StarRating from "./StarRating"
 
 function AddComment({ asin, fetchComments }) {
     const [formData, setFormData] = useState({
         comment: '',
-        rate: '',
+        rate: 0,
         elementId: asin
     })
     const handleChange = (event) => {
@@ -14,9 +14,13 @@ function AddComment({ asin, fetchComments }) {
             [event.target.name]: event.target.value
         })
     }
+
     useEffect(() => {
-        console.log(formData)
-    }, [formData])
+        setFormData(prev => ({
+            ...prev,
+            elementId: asin
+        }))
+    }, [asin])
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -36,7 +40,7 @@ function AddComment({ asin, fetchComments }) {
                 fetchComments()
                 setFormData({
                     comment: "",
-                    rate: "",
+                    rate: 0,
                     elementId: asin
                 })
             } else {
@@ -49,34 +53,36 @@ function AddComment({ asin, fetchComments }) {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <Row className="mb-3">
+            <Row className="g-3 mb-3">
                 <Form.Group as={Col} md="12" controlId="comment">
-                    <Form.Label>Comment</Form.Label>
+                    <Form.Label>La tua recensione</Form.Label>
                     <Form.Control
                         required
                         type="text"
-                        placeholder="comment"
+                        placeholder="Scrivi cosa ne pensi del libro..."
                         name="comment"
-                        value = {formData.comment}
+                        value={formData.comment}
                         onChange={handleChange}
 
                     />
 
                 </Form.Group>
-                <Form.Group as={Col} md="4" controlId="rate">
-                    <Form.Label>rate</Form.Label>
-                    <Form.Control
-                        required
-                        type="number"
-                        placeholder="rate"
-                        name="rate"
-                        value = {formData.rate}
-                        onChange={handleChange}
-
+                <Form.Group as={Col} md="12" controlId="rate">
+                    <Form.Label>Valutazione</Form.Label>
+                    <StarRating
+                        rating={Number(formData.rate)}
+                        setRating={(value) =>
+                            setFormData({
+                                ...formData,
+                                rate: value
+                            })
+                        }
+                        editable={true}
                     />
-
                 </Form.Group>
-                <Button type="submit">Send</Button>
+                <Button type="submit" className="w-100 mt-2">
+                    Pubblica recensione
+                </Button>
             </Row>
         </Form>
 
