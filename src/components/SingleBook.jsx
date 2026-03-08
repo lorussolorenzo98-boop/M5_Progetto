@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {Col, Card, Button } from "react-bootstrap";
+import CommentArea from "./CommentArea";
 
 function SingleBook({book}) {
     const [selected, setSelected] = useState(false)
@@ -13,6 +14,7 @@ function SingleBook({book}) {
                             {book.price}
                         </Card.Text>
                         <Button variant="primary">Add to Cart</Button>
+                        {selected && <CommentArea book={book}/>}
                     </Card.Body>
                 </Card>
             </Col>
